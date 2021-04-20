@@ -19,7 +19,7 @@ We will forecast data 12 months in the future for all relevant zip codes.
   
 ## Methods  
 Our methodology implements the CRISP-DM model for exploratory data analysis, cleaning, modeling, and evaluation.  
-We leveraged SARIMAX modeling from [statsmodels](https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAX.html) to analysis and forecast the home values. The quality of our modeling was determined with the (AIC value)[https://en.wikipedia.org/wiki/Akaike_information_criterion]. We also performed statistical analysis via [SciPy Stats](https://docs.scipy.org/doc/scipy/reference/stats.html) to further make inferences on the data.  
+We leveraged SARIMAX modeling from [statsmodels](https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAX.html) to analysis and forecast the home values. The quality of our modeling was determined with the [AIC value](https://en.wikipedia.org/wiki/Akaike_information_criterion). We also performed statistical analysis via [SciPy Stats](https://docs.scipy.org/doc/scipy/reference/stats.html) to further make inferences on the data.  
 Other tools used include Python, NumPy, and Pandas. Visualizations were created with MatPlotLib and Seaborn.  
   
 ## Conclusion
@@ -50,13 +50,13 @@ We would like to further optimize our model by incorporating exogenous data on m
 ## Bibliography  
 1. Dataset Origin:  
   
-                 Zillow Research Housing Data  
-                        Zillow Group  
+       Zillow Research Housing Data  
+               Zillow Group  
 2. Date:    Thursday April 15, 2021
 3. Web Source:  https://www.zillow.com/research/data/             
   
 <div align="center";>Authors  
-  <div align="center";>Jonathan Silverman & Alexander Xin  
+  <div align="center";>Jonathan Silverman & Wei Alexander Xin  
     
 [Jonathan's GitHub](https://github.com/silvermanjonathan) | [Alexander's GitHub](https://github.com/eggrollofchaos)  
 [Jonathan's LinkedIn](https://www.linkedin.com/in/jonathansilverman007) | [Alexander's LinkedIn](https://www.linkedin.com/in/waximus)

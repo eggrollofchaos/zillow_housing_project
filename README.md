@@ -56,7 +56,7 @@ We would like to further optimize our model by incorporating exogenous data on m
 3. Web Source:  https://www.zillow.com/research/data/             
   
 <div align="center";>Authors  
-  <div align="center";>Jonathan Silverman & Wei Alexander Xin  
+  <div align="center";>Jonathan Silverman & Wei Alexander Xin   
     
 [Jonathan's GitHub](https://github.com/silvermanjonathan) | [Alexander's GitHub](https://github.com/eggrollofchaos)  
 [Jonathan's LinkedIn](https://www.linkedin.com/in/jonathansilverman007) | [Alexander's LinkedIn](https://www.linkedin.com/in/waximus)

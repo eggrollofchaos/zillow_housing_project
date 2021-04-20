@@ -9,7 +9,7 @@ In this project, we examine and perform time series analysis on a dataset of hou
 To make informed recommendations to investment advisors, real estate brokers, and houseowners who are looking to invest in a mid-tier 2-bedroom home in the Los Angeles / San Francisco area. This captures the intent of a couple looking for their first home.  
 
 ## Data  
-Our [dataset](https://files.zillowstatic.com/research/public_v2/zhvi/Zip_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_mon.csv?t=1618844874) comes from the [Research division of Zillow Group](https://www.zillow.com/research/), used with permission. The data represents the typical home values for the zip codes listed for homes falling between the 35th and 65th percentile of home values. General info on the dataset is available (here)[https://www.zillow.com/research/zhvi-methodology-2019-highlights-26221/], and full details are available (here)[https://www.zillow.com/research/zhvi-methodology-2019-deep-26226/].  
+Our [dataset](https://files.zillowstatic.com/research/public_v2/zhvi/Zip_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_mon.csv?t=1618844874) comes from the [Research division of Zillow Group](https://www.zillow.com/research/), used with permission. The data represents the typical home values for the zip codes listed for homes falling between the 35th and 65th percentile of home values. General info on the dataset is available [here](https://www.zillow.com/research/zhvi-methodology-2019-highlights-26221), and full details are available [here](https://www.zillow.com/research/zhvi-methodology-2019-deep-26226).  
   
 ### Historical Data Examined  
 Typical home values are published on the third Thursday of each month, and gives monthly data from 1996 to present.  

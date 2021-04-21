@@ -1,12 +1,12 @@
 # Time Series projections for Zillow Housing Data For Flatiron School Data Science Immersive (Phase 4 Project)
   
 ## Overview  
-In this project, we examine and perform time series analysis on a dataset of housing data from [Zillow Research](https://www.zillow.com/research/data/) to determine where in Los Angeles vs San Fransciso would be best to invest in real estate.  
+In this project, we examine and perform time series analysis on a dataset of housing data from [Zillow Research](https://www.zillow.com/research/data/) to determine where in San Fransciso would be best to invest in real estate.  
 
 ![california_house](images/california_housing.jpg)  
   
 ## Motivation  
-To make informed recommendations to investment advisors, real estate brokers, and houseowners who are looking to invest in a mid-tier 2-bedroom home in the Los Angeles / San Francisco area. This captures the intent of a couple looking for their first home.  
+To make informed recommendations to investment advisors, real estate brokers, and houseowners who are looking to invest in a mid-tier 2-bedroom home in the San Francisco area. This captures the intent of a couple looking for their first home.  
 
 ## Data  
 Our [dataset](Zip_zhvi_bdrmcnt_2_uc_sfrcondo_tier_0.33_0.67_sm_sa_mon.csv) comes from the [Research division of Zillow Group](https://www.zillow.com/research/), used with permission. The data represents the typical home values for the zip codes listed for homes falling between the 35th and 65th percentile of home values. General info on the dataset is available [here](https://www.zillow.com/research/zhvi-methodology-2019-highlights-26221), and full details are available [here](https://www.zillow.com/research/zhvi-methodology-2019-deep-26226).  
@@ -23,11 +23,10 @@ We leveraged SARIMAX modeling from [statsmodels](https://www.statsmodels.org/sta
 Other tools used include Python, NumPy, and Pandas. Visualizations were created with MatPlotLib and Seaborn.  
   
 ## Conclusion
-After running SARIMAX analysis on all zip codes in Los Angeles and San Francisco, we found 3 zip codes from each that showed the greatest projected appreciation in value:  
+After running SARIMAX analysis on all zip codes in San Francisco, we found 3 zip codes that showed the greatest projected appreciation in value:  
 <City>         |  Zip Codes                    | Projected </br> Home Value </br> Growth  
 :--------------|:------------------------------|-----------------------------:  
-Los Angeles    | 90210 </br> 90211 </br> 90355 | 14.4% </br> 13.1% </br> 11.9% 
-San Francisco  | 97588 </br> 97567 </br> 97575 | 16.2% </br> 14.8% </br> 14.2% 
+San Francisco  | 97575 </br> 97570 </br> 97588 | 4.41% </br> 3.07% </br> 3.00% 
 
 
 ## Further Actions  

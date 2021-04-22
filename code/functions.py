@@ -27,6 +27,7 @@ pd.set_option('display.max_rows',25)
 # only display whole years in figures
 years = mdates.YearLocator()
 years_fmt = mdates.DateFormatter('%Y')
+print('Functions loaded.')
 
 def melt_data(df):
     '''
@@ -153,8 +154,9 @@ def plot_seasonal_decomposition(df_all, bedrooms):
     plt.savefig(f'images/{bedrooms}_bdrm_seasonal_decomp.png')
 
 def train_test_split_housing(df_dict):
-    split = 0.9
-    cutoff = [round(split*len(df)) for zipcode, df in df_dict.items()]
+    split = 84
+    print('Using a {split}/{100-split} train-test split...')
+    cutoff = [round((split/100)*len(df)) for zipcode, df in df_dict.items()]
     train_dict_list = [df_dict[i][:cutoff[count]] for count, i in enumerate(list(df_dict.keys()))]
     train_dict = dict(zip(list(df_dict.keys()), train_dict_list))
     test_dict_list = [df_dict[i][cutoff[count]:] for count, i in enumerate(list(df_dict.keys()))]
@@ -247,7 +249,7 @@ def calc_RMSE(test_dict, predictions_dict):
         RMSE_list.append(RMSE)
 
     # get last observed house value per zip code
-    for zipcode, df in sf_1_dict.items():
+    for zipcode, df in test_dict.items():
         hv.append(df.iloc[-1].value)
     RMSE_data = {'zipcode': zipcodes,
                  'RMSE': RMSE_list,
@@ -265,7 +267,7 @@ def plot_train_test(test_dict, predictions_dict, model_best_df, bedrooms):
         ax.plot(df.index, df.value, label='Test')
         ax.plot(predictions_dict[zipcode].index, predictions_dict[zipcode].value, label='Test Predictions')
         ax.set_title(
-            f'{Bedrooms}-Bedroom San Francisco {zipcode} Home Values: Test vs Predictions\n\
+            f'{bedrooms}-Bedroom San Francisco {zipcode} Home Values: Test vs Predictions\n\
             using SARIMAX{model_best_df.loc[zipcode].param}x{model_best_df.loc[zipcode].param_seasonal}')
         plt.legend()
         plt.savefig(f'images/{bedrooms}_bdrm_test_predict{zipcode}.png')
@@ -275,11 +277,11 @@ def plot_RMSE(RMSE_df, bedrooms):
     ax.bar(x=RMSE_df.index, height=RMSE_df.RMSE, color = 'b', alpha=0.4, label = 'RMSE')
     ax.set_ylabel('RMSE (USD)', size = 18)
     ax.set_xlabel('Zip Code', size = 18)
-    ax.set_ylim(0,3.2e5)
+    ax.set_ylim(0,4.2e5)
     ax1 = ax.twinx()
     ax1.bar(x=RMSE_df.index, height=RMSE_df.RMSE_vs_value, color = 'g', alpha=0.3, label = 'RMSE as % of Home Value')
     ax1.set_ylabel('RMSE as Percentage of Home Value (%)', size = 18)
-    ax1.set_ylim(0,32)
+    ax1.set_ylim(0,42)
     ax.set_title(f'{bedrooms}-Bedroom San Francisco Home Values: Test Prediction RMSE', size = 24)
     plt.setp(ax.xaxis.get_majorticklabels(), ha="right", rotation=45, rotation_mode="anchor")
     fig.legend(bbox_to_anchor = (0.85, 0.86))

@@ -10,9 +10,6 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 
-import sys
-sys.path.insert(0, '../code')
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib import ticker
@@ -26,8 +23,6 @@ matplotlib.rc('font', **font)
 
 pd.set_option('display.max_columns',None)
 pd.set_option('display.max_rows',25)
-
-from code.functions import *
 
 # only display whole years in figures
 years = mdates.YearLocator()

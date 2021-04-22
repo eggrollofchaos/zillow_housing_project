@@ -52,13 +52,13 @@ def create_df_dict(df):
     data_list = []
 
     for key in keys:
-        new_pd = df[df.zipcode == int(key)]
-        new_pd.drop('zipcode', inplace=True, axis=1)
-        new_pd.columns = ['date', 'value']
-        new_pd.date = pd.to_datetime(new_pd.date)
-        new_pd.set_index('date', inplace=True)
-        new_pd = new_pd.asfreq('M')
-        data_list.append(new_pd)
+        new_df = df[df.zipcode == int(key)]
+        new_df.drop('zipcode', inplace=True, axis=1)
+        new_df.columns = ['date', 'value']
+        new_df.date = pd.to_datetime(new_df.date)
+        new_df.set_index('date', inplace=True)
+        new_df = new_df.asfreq('M')
+        data_list.append(new_df)
 
     df_dict = dict(zip(keys, data_list))
 
@@ -160,9 +160,9 @@ def plot_seasonal_decomposition(df_all, bedrooms):
 def train_test_split_housing(df_dict):
     split = 0.9
     cutoff = [round(split*len(df)) for zipcode, df in df_dict.items()]
-    train_dict_list = [df_dict[i][:cutoff] for i in list(df_dict.keys())]
+    train_dict_list = [df_dict[i][:cutoff[count]] for count, i in enumerate(list(df_dict.keys()))]
     train_dict = dict(zip(list(df_dict.keys()), train_dict_list))
-    test_dict_list = [df_dict[i][cutoff:] for i in list(df_dict.keys())]
+    test_dict_list = [df_dict[i][cutoff[count]:] for count, i in enumerate(list(df_dict.keys()))]
     test_dict = dict(zip(list(df_dict.keys()), test_dict_list))
     return train_dict, test_dict
 
@@ -325,6 +325,23 @@ def create_final_df(df_dict, forecast_dict, bedrooms):
     final_sorted_df.set_index('zipcode', inplace=True)
     final_sorted_df.to_csv(f'data/{bedrooms}_bdrm_final_forecasts.csv')
     return final_sorted_df
+
+def visualize_forecasts(df, forecast_df, bedrooms):
+    fig, ax = plt.subplots(figsize=(20,12))
+    ax.set_title(f'{bedroom}-Bedroom Home Values in San Franciso by Zip Code: Forecast', size=24)
+    sns.lineplot(data=df, x=df.date, y=df.value, ax=ax,
+        hue='zipcode', style='zipcode', label = 'Historical')
+    sns.lineplot(data=forecast_df, x=forecast_df.index, y=forecast_df.value,
+        ax=ax, hue='zipcode', style='zipcode', label='Forecast')
+    ax.set_xlabel('Year', size=20)
+    ax.set_ylabel('Home Value (USD)', size=20)
+    ax.set_xlim(pd.Timestamp('1996'), pd.Timestamp('2022-05-31'))
+    ax.xaxis.set_major_locator(years)
+    ax.xaxis.set_major_formatter(years_fmt)
+    ax.set_yticks(np.linspace(1e5,1.5e6,15))
+    ax.set_ylim((1e5, 1.5e6))
+    ax.get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
+    plt.savefig(f'images/{bedrooms}_bdrm_home_values_forecast.png')
 
 def visualize_results(df1, df2):
     fig, ax = plt.subplots(2, 1, figsize = (12,16))

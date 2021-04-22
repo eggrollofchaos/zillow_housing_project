@@ -20,7 +20,7 @@ import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
 plt.style.use('ggplot')
 sns.set_theme(style="whitegrid")
-%matplotlib inline
+
 font = {'size'   : 12}
 matplotlib.rc('font', **font)
 
@@ -43,8 +43,94 @@ def melt_data(df):
     melted = melted.dropna(subset=['value'])
     return melted
 
-def plot_seasonal_decomposition:
-    decomp = seasonal_decompose(sf_all, freq=12)
+def visualize_data(df):
+    pass
+
+def create_df_dict(df):
+    zipcodes = list(set(df.zipcode))
+    keys = [zipcode for zipcode in map(str,zipcodes)]
+    data_list = []
+
+    for key in keys:
+        new_pd = df[df.zipcode == int(key)]
+        new_pd.drop('zipcode', inplace=True, axis=1)
+        new_pd.columns = ['date', 'value']
+        new_pd.date = pd.to_datetime(new_pd.date)
+        new_pd.set_index('date', inplace=True)
+        new_pd = new_pd.asfreq('M')
+        data_list.append(new_pd)
+
+    df_dict = dict(zip(keys, data_list))
+
+    return df_dict
+
+def test_stationarity(df_all, diffs=0):
+    if diffs == 2:
+        dftest = adfuller(df_all.diff().diff().dropna())
+    elif diffs == 1:
+        dftest = adfuller(df_all.diff().dropna())
+    else:
+        dftest = adfuller(df_all)
+    dfoutput = pd.Series(dftest[0:4], index=['Test Statistic',
+                                             'p-value', '#Lags Used',
+                                             'Number of Observations Used'])
+    for key, value in dftest[4].items():
+        dfoutput['Critical Value (%s)' %key] = value
+    print (dfoutput)
+
+def test_stationarity_all_zips(df_dict, diffs=0):
+    for zipcode, df in df_dict.items():
+        if diffs == 2:
+            dftest = adfuller(df.diff().diff().dropna())
+        elif diffs == 1:
+            dftest = adfuller(df.diff().dropna())
+        else:
+            dftest = adfuller(df)
+        dfoutput = pd.Series(dftest[0:4], index=['Test Statistic',
+                                             'p-value', '#Lags Used',
+                                             'Number of Observations Used'])
+        for key, value in dftest[4].items():
+            dfoutput['Critical Value (%s)' %key] = value
+        print(dfoutput[1])
+
+def plot_pacf_housing(df_all, bedrooms):
+    pacf_fig, ax = plt.subplots(1, 2, figsize=(12, 6))
+    pacf_fig.suptitle(f'Partial Autocorrelations of {bedrooms}-Bedroom Time Series\
+        for Entire San Francisco Data Set', fontsize=18)
+    plot_pacf(df_all, ax=ax[0])
+    ax[0].set_title('Undifferenced PACF', size=14)
+    ax[0].set_xlabel('Lags', size=14)
+    ax[0].set_ylabel('PACF', size=14)
+    plot_pacf(df_all.diff().dropna(), ax=ax[1])
+    ax[1].set_title('Differenced PACF', size=14)
+    ax[1].set_xlabel('Lags', size=14)
+    ax[1].set_ylabel('PACF', size=14)
+    pacf_fig.tight_layout()
+    pacf_fig.subplots_adjust(top=0.9)
+    plt.savefig(f'images/{bedrooms}_bdrm_PACF.png')
+
+def plot_acf_housing(df_all, bedrooms):
+    acf_fig, ax = plt.subplots(1, 3, figsize=(18, 6))
+    acf_fig.suptitle(f'Autocorrelations of {bedrooms}-Bedroom Time Series\
+        for Entire San Francisco Data Set', fontsize=18)
+    plot_acf(df_all, ax=ax[0])
+    ax[0].set_title('Undifferenced ACF', size=14)
+    ax[0].set_xlabel('Lags', size=14)
+    ax[0].set_ylabel('ACF', size=14)
+    plot_acf(df_all.diff().dropna(), ax=ax[1])
+    ax[1].set_title('Once-Differenced ACF', size=14)
+    ax[1].set_xlabel('Lags', size=14)
+    ax[1].set_ylabel('ACF', size=14)
+    plot_acf(df_all.diff().diff().dropna(), ax=ax[2])
+    ax[2].set_title('Once-Differenced ACF', size=14)
+    ax[2].set_xlabel('Lags', size=14)
+    ax[2].set_ylabel('ACF', size=14)
+    acf_fig.tight_layout()
+    acf_fig.subplots_adjust(top=0.9)
+    plt.savefig(f'images/{bedrooms}_bdrm_PACF.png')
+
+def plot_seasonal_decomposition(df_all, bedrooms):
+    decomp = seasonal_decompose(df_all, freq=12)
     dc_obs = decomp.observed
     dc_trend = decomp.trend
     dc_seas = decomp.seasonal
@@ -57,28 +143,27 @@ def plot_seasonal_decomposition:
     decomp_fig, axes = plt.subplots(4, 1, figsize=(12, 12))
     for i, ax in enumerate(axes):
         ax.plot(dc_df.iloc[:, i])
-        start = dc_df.iloc[:, 0].year
-        # ax.set_xlim(pd.Timestamp('1996'), pd.Timestamp('2022-05-31'))
         ax.set_xlim(start, end)
         ax.xaxis.set_major_locator(years)
         ax.xaxis.set_major_formatter(years_fmt)
-        ax.set_ylabel(dc_2_df.iloc[:, i].name)
+        ax.set_ylabel(dc_df.iloc[:, i].name)
         if i != 2:
             ax.get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
         plt.setp(ax.xaxis.get_majorticklabels(), ha="right", rotation=45, rotation_mode="anchor")
 
-    decomp_2_fig.suptitle(
-        'Seasonal Decomposition of 2-Bedroom Time Series of San Francisco Home Values (Mean)', fontsize=24)
-    decomp_2_fig.tight_layout()
-    decomp_2_fig.subplots_adjust(top=0.94)
-    plt.savefig('images/2_bdrm_seasonal_decomp.png')
+    decomp_fig.suptitle(
+        f'Seasonal Decomposition of {bedrooms}-Bedroom Time Series of San Francisco Home Values (Mean)', fontsize=24)
+    decomp_fig.tight_layout()
+    decomp_fig.subplots_adjust(top=0.94)
+    plt.savefig(f'images/{bedrooms}_bdrm_seasonal_decomp.png')
 
-def train_test_split_housing(data_dict):
-    cutoff = round(len(data_dict[list(data_dict.keys())[0]])*.8)
-    train_dict_list = [data_dict[i][:cutoff] for i in list(data_dict.keys())]
-    train_dict = dict(zip(list(data_dict.keys()), train_dict_list))
-    test_dict_list = [data_dict[i][cutoff:] for i in list(data_dict.keys())]
-    test_dict = dict(zip(list(data_dict.keys()), test_dict_list))
+def train_test_split_housing(df_dict):
+    split = 0.9
+    cutoff = [round(split*len(df)) for zipcode, df in df_dict.items()]
+    train_dict_list = [df_dict[i][:cutoff] for i in list(df_dict.keys())]
+    train_dict = dict(zip(list(df_dict.keys()), train_dict_list))
+    test_dict_list = [df_dict[i][cutoff:] for i in list(df_dict.keys())]
+    test_dict = dict(zip(list(df_dict.keys()), test_dict_list))
     return train_dict, test_dict
 
 def gridsearch_SARIMAX(train_dict, seas = 12, p_min=2, p_max=2, q_min=1, q_max=2, d_min=1, d_max=2,
@@ -157,9 +242,12 @@ def evaluate_model(train_dict, test_dict, model_best_df):
     return cat_predict_dict
 
 def calc_RMSE(test_dict, predictions_dict):
-    zipcodes = RMSE_list = hv = []
+    zipcodes = []
+    RMSE_list = []
+    hv = []
     for zipcode, df in test_dict.items():
-        RMSE = metrics.mean_squared_error(test_dict[zipcode], predictions_dict[zipcode].iloc[-60:], squared=False)
+        window = len(df)
+        RMSE = metrics.mean_squared_error(test_dict[zipcode], predictions_dict[zipcode].iloc[-window:], squared=False)
         zipcodes.append(zipcode)
         RMSE_list.append(RMSE)
 
@@ -202,10 +290,10 @@ def plot_RMSE(RMSE_df, bedrooms):
     fig.legend(bbox_to_anchor = (0.85, 0.86))
     plt.savefig(f'images/{bedrooms}_bdrm_RMSE.png')
 
-def run_forecast(data_dict, model_best_df):
+def run_forecast(df_dict, model_best_df):
     forecast_dict = {}
 
-    for zipcode, df in data_dict.items():
+    for zipcode, df in df_dict.items():
 
         zipcode = zipcode[-5:]
         sari_mod = SARIMAX(df.dropna(),
@@ -226,9 +314,9 @@ def run_forecast(data_dict, model_best_df):
         plt.savefig(f'images/1_bdrm_forecast_{zipcode}.png')
     return forecast_dict
 
-def create_final_df(data_dict, forecast_dict, bedrooms):
+def create_final_df(df_dict, forecast_dict, bedrooms):
     final_dict = {'zipcode': list(forecast_dict.keys()),
-                  'current_value': [df.iloc[-1].values[0] for df in list(data_dict.values())],
+                  'current_value': [df.iloc[-1].values[0] for df in list(df_dict.values())],
                   'forecasted_value': [df.iloc[-1] for df in list(forecast_dict.values())]
                   }
     final_df = pd.DataFrame(final_dict)
@@ -254,6 +342,6 @@ def visualize_results(df1, df2):
     fig.tight_layout(pad=2.0)
     plt.savefig(f'images/final_forecasts.png')
 
-def best_3_zipcodes(sorted_df):
-    print(f'The zipcodes with the greatest projected growth in mid-tier home values are {sorted_df.iloc[-3]},\
+def best_3_zipcodes(sorted_df, bedroomoms):
+    print(f'The zipcodes with the greatest projected growth in mid-tier {bedroom}-bedroom home values are {sorted_df.iloc[-3]},\
         {sorted_df.iloc[-2]}, and {sorted_df.iloc[-1]}.')

@@ -15,7 +15,7 @@ Our [data set](Zip_zhvi_bdrmcnt_2_uc_sfrcondo_tier_0.33_0.67_sm_sa_mon.csv) come
 Typical home values are published on the third Thursday of each month, and gives monthly data from 1996 to present.  
 
 ### Target Variable  
-We will forecast data 12 months in the future for all relevant zip codes in 1-bedroom and 2-bedroom data sets.  We will then compare the top performing zip codes.
+We will forecast data 12 months in the future for all relevant zip codes (25 in total) in 1-bedroom and 2-bedroom data sets.  We will then compare the top performing zip codes.
   
 ## Methods  
 Our methodology implements the CRISP-DM model for exploratory data analysis, cleaning, modeling, and evaluation.  
@@ -29,7 +29,8 @@ Type of Home    |  Zip Codes                    | Projected </br> Home Value </b
 1-Bedroom Homes | 94124 </br> 94134 </br> 94132 | 6.03% </br> 5.61% </br> 3.57% 
 2-Bedroom Homes | 94121 </br> 94116 </br> 94134 | 4.41% </br> 3.07% </br> 2.74% 
 
-<b>We see that 1-bedroom homes in zip code 94124 shows the greatest project growth in value.</b>
+<b>We see that 1-bedroom homes in zip code 94124 shows the greatest project growth in value.</b>  
+Perhaps unsurprisingly, this zip code currently has the lowest prices for San Francisco 1-bedroom homes.  According to our model, in a year's time this zip code will be ranked 5th lowest in price out of the 25 zip codes.
 
 ## Further Actions  
 Using exogenous such as school district data, crime data, presence of parks/nature in vicinity, proximity to hospitals, groceries, entertainment, transportation etc., we can further refine our model as well as assign weights based on what a home buyer is looking to prioritize. We may find that growth in home value may be highly correlated to better education, lower crime rate, etc.   

@@ -16,7 +16,7 @@ from matplotlib import ticker
 import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
 plt.style.use('ggplot')
-sns.set_theme(style="whitegrid")
+sns.set_theme(style="darkgrid")
 
 font = {'size'   : 12}
 matplotlib.rc('font', **font)
@@ -91,8 +91,7 @@ def test_stationarity_all_zips(df_dict, diffs=0):
 
 def plot_pacf_housing(df_all, bedrooms):
     pacf_fig, ax = plt.subplots(1, 2, figsize=(12, 6))
-    pacf_fig.suptitle(f'Partial Autocorrelations of {bedrooms}-Bedroom Time Series\
-    for Entire San Francisco Data Set', fontsize=18)
+    pacf_fig.suptitle(f'Partial Autocorrelations of {bedrooms}-Bedroom Time Series for Entire San Francisco Data Set', fontsize=18)
     plot_pacf(df_all, ax=ax[0])
     ax[0].set_title('Undifferenced PACF', size=14)
     ax[0].set_xlabel('Lags', size=14)
@@ -107,8 +106,7 @@ def plot_pacf_housing(df_all, bedrooms):
 
 def plot_acf_housing(df_all, bedrooms):
     acf_fig, ax = plt.subplots(1, 3, figsize=(18, 6))
-    acf_fig.suptitle(f'Autocorrelations of {bedrooms}-Bedroom Time Series\
-    for Entire San Francisco Data Set', fontsize=18)
+    acf_fig.suptitle(f'Autocorrelations of {bedrooms}-Bedroom Time Series for Entire San Francisco Data Set', fontsize=18)
     plot_acf(df_all, ax=ax[0])
     ax[0].set_title('Undifferenced ACF', size=14)
     ax[0].set_xlabel('Lags', size=14)
@@ -163,8 +161,8 @@ def train_test_split_housing(df_dict):
     test_dict = dict(zip(list(df_dict.keys()), test_dict_list))
     return train_dict, test_dict
 
-def gridsearch_SARIMAX(train_dict, seas = 12, p_min=2, p_max=2, q_min=1, q_max=2, d_min=1, d_max=2,
-                       s_p_min=2, s_p_max=2, s_q_min=1, s_q_max=2, s_d_min=1, s_d_max=2):
+def gridsearch_SARIMAX(train_dict, seas = 12, p_min=2, p_max=2, q_min=0, q_max=0, d_min=1, d_max=1,
+                       s_p_min=2, s_p_max=2, s_q_min=0, s_q_max=0, s_d_min=1, s_d_max=1):
     p = range(p_min, p_max+1)
     q = range(q_min, q_max+1)
     d = range(d_min, d_max+1)
@@ -268,8 +266,7 @@ def plot_train_test(test_dict, predictions_dict, model_best_df, bedrooms):
         ax.plot(df.index, df.value, label='Test')
         ax.plot(predictions_dict[zipcode].index, predictions_dict[zipcode].value, label='Test Predictions')
         ax.set_title(
-            f'{bedrooms}-Bedroom San Francisco {zipcode} Home Values: Test vs Predictions\n\
-            using SARIMAX{model_best_df.loc[zipcode].param}x{model_best_df.loc[zipcode].param_seasonal}')
+            f'{bedrooms}-Bedroom San Francisco {zipcode} Home Values: Test vs Predictions\nusing SARIMAX{model_best_df.loc[zipcode].param}x{model_best_df.loc[zipcode].param_seasonal}')
         plt.legend()
         plt.savefig(f'images/{bedrooms}_bdrm_test_predict{zipcode}.png')
 
@@ -306,8 +303,7 @@ def run_forecast(df_dict, model_best_df):
         ax.plot(df.index, df.value, label='Historical')
         ax.plot(forecast, label='Forecast')
         ax.set_title(
-            f'1-Bedroom San Francisco {zipcode} Home Values: 1 Year Forecast\n\
-            using SARIMAX{model_best_df.loc[zipcode].param}x{model_best_df.loc[zipcode].param_seasonal}')
+            f'1-Bedroom San Francisco {zipcode} Home Values: 1 Year Forecast\nusing SARIMAX{model_best_df.loc[zipcode].param}x{model_best_df.loc[zipcode].param_seasonal}')
         plt.legend()
         plt.savefig(f'images/1_bdrm_forecast_{zipcode}.png')
     return forecast_dict
@@ -358,5 +354,4 @@ def visualize_results(df1, df2):
     plt.savefig(f'images/final_forecasts.png')
 
 def best_3_zipcodes(sorted_df, bedrooms):
-    print(f'The zipcodes with the greatest projected growth in mid-tier {bedrooms}-bedroom home values are:\n \
-        {sorted_df.iloc[-3]}\n {sorted_df.iloc[-2]}\n {sorted_df.iloc[-1]}')
+    print(f'The zipcodes with the greatest projected growth in mid-tier {bedrooms}-bedroom home values are:\n{sorted_df.iloc[-3]}\n {sorted_df.iloc[-2]}\n {sorted_df.iloc[-1]}')

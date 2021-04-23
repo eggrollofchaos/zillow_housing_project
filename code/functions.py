@@ -151,8 +151,7 @@ def plot_seasonal_decomposition(df_all, bedrooms):
     decomp_fig.subplots_adjust(top=0.94)
     plt.savefig(f'images/{bedrooms}_bdrm_seasonal_decomp.png')
 
-def train_test_split_housing(df_dict):
-    split = 84
+def train_test_split_housing(df_dict, split=84):
     print(f'Using a {split}/{100-split} train-test split...')
     cutoff = [round((split/100)*len(df)) for zipcode, df in df_dict.items()]
     train_dict_list = [df_dict[i][:cutoff[count]] for count, i in enumerate(list(df_dict.keys()))]
@@ -194,7 +193,7 @@ def gridsearch_SARIMAX(train_dict, seas = 12, p_min=2, p_max=2, q_min=0, q_max=0
                 param_seasonal_list.append(param_seasonal)
                 aic = mod.fit().aic
                 aic_list.append(aic)
-                print(aic)
+                print(f'Zip code {zipcode}: {aic}')
     return zipcodes, param_list, param_seasonal_list, aic_list
 
 def get_best_params(zipcodes, param_list, param_seasonal_list, aic_list, bedrooms):
@@ -257,8 +256,64 @@ def calc_RMSE(test_dict, predictions_dict, bedrooms):
     RMSE_df = RMSE_df.sort_values('RMSE', axis=0, ascending=False)
     RMSE_df['RMSE_vs_value'] = 100*RMSE_df.RMSE/RMSE_df.last_value
     RMSE_df.set_index('zipcode', inplace=True)
+    print(RMSE_df)
     RMSE_df.to_csv(f'data/{bedrooms}_bdrm_RMSE.csv')
     return RMSE_df
+
+def gridsearch_SARIMAX_test_predict(train_dict, test_dict, seas = 12, p_min=2, p_max=2, q_min=0, q_max=0, d_min=1, d_max=1,
+                       s_p_min=2, s_p_max=2, s_q_min=0, s_q_max=0, s_d_min=1, s_d_max=1):
+    p = range(p_min, p_max+1)
+    q = range(q_min, q_max+1)
+    d = range(d_min, d_max+1)
+    s_p = range(s_p_min, s_p_max+1)
+    s_q = range(s_q_min, s_q_max+1)
+    s_d = range(s_d_min, s_d_max+1)
+    pdq = list(itertools.product(p, d, q))
+    seasonal_pdq = [(x[0], x[1], x[2], seas) for x in list(itertools.product(s_p, s_d, s_q))]
+    print('Parameters for SARIMAX grid search for test predictions...')
+    for i in pdq:
+        for s in seasonal_pdq:
+            print('SARIMAX: {} x {}'.format(i, s))
+
+    zipcodes = []
+    param_list = []
+    param_seasonal_list = []
+    RMSE_list = []
+    predict_dict = {}
+    cat_predict_dict = train_dict.copy()
+
+    for param in pdq:
+        for param_seasonal in seasonal_pdq:
+            predict_dict = {}
+            cat_predict_dict = train_dict.copy()
+            for count in range(5):
+                for zipcode, df in cat_predict_dict.items():
+                    if cat_predict_dict[zipcode].index[-1] >= pd.to_datetime('2021-02-28'):
+                        print(param, param_seasonal)
+                        window = len(test_dict[zipcode])
+                        RMSE = metrics.mean_squared_error(test_dict[zipcode], cat_predict_dict[zipcode].iloc[-window:], squared=False)
+                        zipcodes.append(zipcode)
+                        param_list.append(param)
+                        param_seasonal_list.append(param_seasonal)
+                        RMSE_list.append(RMSE)
+                        print(f'Zip code {zipcode}: {RMSE}')
+                        continue
+
+                    sari_mod = SARIMAX(df,
+                                       order=param,
+                                       seasonal_order=param_seasonal,
+                                       enforce_stationarity=False,
+                                       enforce_invertibility=False).fit()
+
+                    predict = sari_mod.forecast(steps = 12, dynamic = False)
+                    print((zipcode,predict.index[-1],predict[-1]))
+                    predict_dict[zipcode] = predict
+                    dfB = pd.DataFrame(predict_dict[zipcode])
+                    dfB.columns = ['value']
+                    dfA = cat_predict_dict[zipcode]
+                    cat_predict_dict[zipcode] = pd.concat([dfA, dfB], axis=0)
+
+    return zipcodes, param_list, param_seasonal_list, RMSE_list
 
 def plot_train_test(test_dict, predictions_dict, model_best_df, bedrooms):
     for zipcode, df in test_dict.items():

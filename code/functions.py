@@ -92,7 +92,7 @@ def test_stationarity_all_zips(df_dict, diffs=0):
 def plot_pacf_housing(df_all, bedrooms):
     pacf_fig, ax = plt.subplots(1, 2, figsize=(12, 6))
     pacf_fig.suptitle(f'Partial Autocorrelations of {bedrooms}-Bedroom Time Series\
-        for Entire San Francisco Data Set', fontsize=18)
+    for Entire San Francisco Data Set', fontsize=18)
     plot_pacf(df_all, ax=ax[0])
     ax[0].set_title('Undifferenced PACF', size=14)
     ax[0].set_xlabel('Lags', size=14)
@@ -108,7 +108,7 @@ def plot_pacf_housing(df_all, bedrooms):
 def plot_acf_housing(df_all, bedrooms):
     acf_fig, ax = plt.subplots(1, 3, figsize=(18, 6))
     acf_fig.suptitle(f'Autocorrelations of {bedrooms}-Bedroom Time Series\
-        for Entire San Francisco Data Set', fontsize=18)
+    for Entire San Francisco Data Set', fontsize=18)
     plot_acf(df_all, ax=ax[0])
     ax[0].set_title('Undifferenced ACF', size=14)
     ax[0].set_xlabel('Lags', size=14)
@@ -118,7 +118,7 @@ def plot_acf_housing(df_all, bedrooms):
     ax[1].set_xlabel('Lags', size=14)
     ax[1].set_ylabel('ACF', size=14)
     plot_acf(df_all.diff().diff().dropna(), ax=ax[2])
-    ax[2].set_title('Once-Differenced ACF', size=14)
+    ax[2].set_title('Twice-Differenced ACF', size=14)
     ax[2].set_xlabel('Lags', size=14)
     ax[2].set_ylabel('ACF', size=14)
     acf_fig.tight_layout()
@@ -155,7 +155,7 @@ def plot_seasonal_decomposition(df_all, bedrooms):
 
 def train_test_split_housing(df_dict):
     split = 84
-    print('Using a {split}/{100-split} train-test split...')
+    print(f'Using a {split}/{100-split} train-test split...')
     cutoff = [round((split/100)*len(df)) for zipcode, df in df_dict.items()]
     train_dict_list = [df_dict[i][:cutoff[count]] for count, i in enumerate(list(df_dict.keys()))]
     train_dict = dict(zip(list(df_dict.keys()), train_dict_list))
@@ -238,7 +238,7 @@ def evaluate_model(train_dict, test_dict, model_best_df):
             cat_predict_dict[zipcode] = pd.concat([dfA, dfB], axis=0)
     return cat_predict_dict
 
-def calc_RMSE(test_dict, predictions_dict):
+def calc_RMSE(test_dict, predictions_dict, bedrooms):
     zipcodes = []
     RMSE_list = []
     hv = []
@@ -259,6 +259,7 @@ def calc_RMSE(test_dict, predictions_dict):
     RMSE_df = RMSE_df.sort_values('RMSE', axis=0, ascending=False)
     RMSE_df['RMSE_vs_value'] = 100*RMSE_df.RMSE/RMSE_df.last_value
     RMSE_df.set_index('zipcode', inplace=True)
+    RMSE_df.to_csv(f'data/{bedrooms}_bdrm_RMSE.csv')
     return RMSE_df
 
 def plot_train_test(test_dict, predictions_dict, model_best_df, bedrooms):
@@ -325,7 +326,7 @@ def create_final_df(df_dict, forecast_dict, bedrooms):
 
 def visualize_forecasts(df, forecast_df, bedrooms):
     fig, ax = plt.subplots(figsize=(20,12))
-    ax.set_title(f'{bedroom}-Bedroom Home Values in San Franciso by Zip Code: Forecast', size=24)
+    ax.set_title(f'{bedrooms}-Bedroom Home Values in San Franciso by Zip Code: Forecast', size=24)
     sns.lineplot(data=df, x=df.date, y=df.value, ax=ax,
         hue='zipcode', style='zipcode', label = 'Historical')
     sns.lineplot(data=forecast_df, x=forecast_df.index, y=forecast_df.value,
@@ -356,6 +357,6 @@ def visualize_results(df1, df2):
     fig.tight_layout(pad=2.0)
     plt.savefig(f'images/final_forecasts.png')
 
-def best_3_zipcodes(sorted_df, bedroomoms):
-    print(f'The zipcodes with the greatest projected growth in mid-tier {bedroom}-bedroom home values are {sorted_df.iloc[-3]},\
-        {sorted_df.iloc[-2]}, and {sorted_df.iloc[-1]}.')
+def best_3_zipcodes(sorted_df, bedrooms):
+    print(f'The zipcodes with the greatest projected growth in mid-tier {bedrooms}-bedroom home values are:\n \
+        {sorted_df.iloc[-3]}\n {sorted_df.iloc[-2]}\n {sorted_df.iloc[-1]}')

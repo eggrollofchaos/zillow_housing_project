@@ -1,7 +1,7 @@
 # Time Series projections for Zillow Housing Data For Flatiron School Data Science Immersive (Phase 4 Project)
   
 ## Overview  
-In this project, we examine and perform time series analysis on a dataset of housing data from [Zillow Research](https://www.zillow.com/research/data/) to determine whether 1-bedroom or 2-bedrooms homes in San Fransciso would be better for investment on a 1 year time horizon.  
+In this project, we examine and perform time series analysis on a data set of housing data from [Zillow Research](https://www.zillow.com/research/data/) to determine whether 1-bedroom or 2-bedrooms homes in San Fransciso would be better for investment on a 1 year time horizon.  
 
 ![california_house](images/california_housing.jpg)  
   
@@ -9,7 +9,7 @@ In this project, we examine and perform time series analysis on a dataset of hou
 To make informed recommendations to investment advisors, real estate brokers, and houseowners who are looking to invest in a mid-tier 1 or 2-bedroom home in the San Francisco area. This best captures the intent of a couple looking for their first home, or a yuppie looking to buy their first property, and may choose to upgrade and sell for a profit in one year.
 
 ## Data  
-Our [dataset](Zip_zhvi_bdrmcnt_2_uc_sfrcondo_tier_0.33_0.67_sm_sa_mon.csv) comes from the [Research division of Zillow Group](https://www.zillow.com/research/), used with permission. The data represents the typical home values for the zip codes listed for homes falling between the 35th and 65th percentile of home values. General info on the dataset is available [here](https://www.zillow.com/research/zhvi-methodology-2019-highlights-26221), and full details are available [here](https://www.zillow.com/research/zhvi-methodology-2019-deep-26226).  
+Our [data set](Zip_zhvi_bdrmcnt_2_uc_sfrcondo_tier_0.33_0.67_sm_sa_mon.csv) comes from the [Research division of Zillow Group](https://www.zillow.com/research/), used with permission. The data represents the typical home values for the zip codes listed for homes falling between the 35th and 65th percentile of home values. General info on the data set is available [here](https://www.zillow.com/research/zhvi-methodology-2019-highlights-26221), and full details are available [here](https://www.zillow.com/research/zhvi-methodology-2019-deep-26226).  
   
 ### Historical Data Examined  
 Typical home values are published on the third Thursday of each month, and gives monthly data from 1996 to present.  

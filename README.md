@@ -1,7 +1,7 @@
 # Time Series projections for Zillow Housing Data For Flatiron School Data Science Immersive (Phase 4 Project)
   
 ## Overview  
-In this project, we examine and perform time series analysis on a data set of housing data from [Zillow Research](https://www.zillow.com/research/data/) to determine whether 1-bedroom or 2-bedrooms homes in San Fransciso would be better for investment on a 1 year time horizon.  
+In this project, we examine and perform time series analysis on a data set of housing data from [Zillow Research](https://www.zillow.com/research/data/) to determine whether 1-bedroom or 2-bedrooms homes in San Francisco would be better for investment on a 1 year time horizon.  
 
 ![california_house](images/california_housing.jpg)  
   

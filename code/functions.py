@@ -29,6 +29,7 @@ years = mdates.YearLocator()
 years_fmt = mdates.DateFormatter('%Y')
 print('Functions loaded.')
 
+
 def melt_data(df):
     '''
     Takes in a Zillow Housing Data File (ZHVI) as a DataFrame in wide format
@@ -39,8 +40,10 @@ def melt_data(df):
     melted = melted.dropna(subset=['value'])
     return melted
 
+
 def visualize_data(df):
     pass
+
 
 def create_df_dict(df):
     zipcodes = list(set(df.zipcode))

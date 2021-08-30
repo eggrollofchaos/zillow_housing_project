@@ -63,6 +63,7 @@ def create_df_dict(df):
 
     return df_dict
 
+
 def test_stationarity(df_all, diffs=0):
     if diffs == 2:
         dftest = adfuller(df_all.diff().diff().dropna())
@@ -76,6 +77,7 @@ def test_stationarity(df_all, diffs=0):
     for key, value in dftest[4].items():
         dfoutput['Critical Value (%s)' %key] = value
     print (dfoutput)
+
 
 def test_stationarity_all_zips(df_dict, diffs=0):
     for zipcode, df in df_dict.items():
@@ -92,6 +94,7 @@ def test_stationarity_all_zips(df_dict, diffs=0):
             dfoutput['Critical Value (%s)' %key] = value
         print(dfoutput[1])
 
+
 def plot_pacf_housing(df_all, bedrooms):
     pacf_fig, ax = plt.subplots(1, 2, figsize=(12, 6))
     pacf_fig.suptitle(f'Partial Autocorrelations of {bedrooms}-Bedroom Time Series for Entire San Francisco Data Set', fontsize=18)
@@ -106,6 +109,7 @@ def plot_pacf_housing(df_all, bedrooms):
     pacf_fig.tight_layout()
     pacf_fig.subplots_adjust(top=0.9)
     plt.savefig(f'images/{bedrooms}_bdrm_PACF.png')
+
 
 def plot_acf_housing(df_all, bedrooms):
     acf_fig, ax = plt.subplots(1, 3, figsize=(18, 6))
@@ -125,6 +129,7 @@ def plot_acf_housing(df_all, bedrooms):
     acf_fig.tight_layout()
     acf_fig.subplots_adjust(top=0.9)
     plt.savefig(f'images/{bedrooms}_bdrm_PACF.png')
+
 
 def plot_seasonal_decomposition(df_all, bedrooms):
     decomp = seasonal_decompose(df_all, freq=12)
@@ -154,6 +159,7 @@ def plot_seasonal_decomposition(df_all, bedrooms):
     decomp_fig.subplots_adjust(top=0.94)
     plt.savefig(f'images/{bedrooms}_bdrm_seasonal_decomp.png')
 
+
 def train_test_split_housing(df_dict, split=84):
     print(f'Using a {split}/{100-split} train-test split...')
     cutoff = [round((split/100)*len(df)) for zipcode, df in df_dict.items()]
@@ -162,6 +168,7 @@ def train_test_split_housing(df_dict, split=84):
     test_dict_list = [df_dict[i][cutoff[count]:] for count, i in enumerate(list(df_dict.keys()))]
     test_dict = dict(zip(list(df_dict.keys()), test_dict_list))
     return train_dict, test_dict
+
 
 def gridsearch_SARIMAX(train_dict, seas = 12, p_min=2, p_max=2, q_min=0, q_max=0, d_min=1, d_max=1,
                        s_p_min=2, s_p_max=2, s_q_min=0, s_q_max=0, s_d_min=1, s_d_max=1):
@@ -199,6 +206,7 @@ def gridsearch_SARIMAX(train_dict, seas = 12, p_min=2, p_max=2, q_min=0, q_max=0
                 print(f'Zip code {zipcode}: {aic}')
     return zipcodes, param_list, param_seasonal_list, aic_list
 
+
 def get_best_params(zipcodes, param_list, param_seasonal_list, aic_list, bedrooms):
     # intialize list of model params
     model_data = {'zipcode': zipcodes,
@@ -215,6 +223,7 @@ def get_best_params(zipcodes, param_list, param_seasonal_list, aic_list, bedroom
     print(best_params_df)
     best_params_df.to_csv(f'data/{bedrooms}_bdrm_best_params.csv')
     return best_params_df
+
 
 def evaluate_model(train_dict, test_dict, model_best_df):
     predict_dict = {}
@@ -237,6 +246,7 @@ def evaluate_model(train_dict, test_dict, model_best_df):
             dfA = cat_predict_dict[zipcode]
             cat_predict_dict[zipcode] = pd.concat([dfA, dfB], axis=0)
     return cat_predict_dict
+
 
 def calc_RMSE(test_dict, predictions_dict, bedrooms):
     zipcodes = []
@@ -262,6 +272,7 @@ def calc_RMSE(test_dict, predictions_dict, bedrooms):
     print(RMSE_df)
     RMSE_df.to_csv(f'data/{bedrooms}_bdrm_RMSE.csv')
     return RMSE_df
+
 
 def gridsearch_SARIMAX_test_predict(train_dict, test_dict, seas = 12, p_min=2, p_max=2, q_min=0, q_max=0, d_min=1, d_max=1,
                        s_p_min=2, s_p_max=2, s_q_min=0, s_q_max=0, s_d_min=1, s_d_max=1):
@@ -318,6 +329,7 @@ def gridsearch_SARIMAX_test_predict(train_dict, test_dict, seas = 12, p_min=2, p
 
     return zipcodes, param_list, param_seasonal_list, RMSE_list
 
+
 def plot_train_test(test_dict, predictions_dict, model_best_df, bedrooms):
     for zipcode, df in test_dict.items():
         fig, ax = plt.subplots()
@@ -327,6 +339,7 @@ def plot_train_test(test_dict, predictions_dict, model_best_df, bedrooms):
             f'{bedrooms}-Bedroom San Francisco {zipcode} Home Values: Test vs Predictions\nusing SARIMAX{model_best_df.loc[zipcode].param}x{model_best_df.loc[zipcode].param_seasonal}')
         plt.legend()
         plt.savefig(f'images/{bedrooms}_bdrm_test_predict{zipcode}.png')
+
 
 def plot_RMSE(RMSE_df, bedrooms):
     fig, ax = plt.subplots(figsize = (12,8))
@@ -342,6 +355,7 @@ def plot_RMSE(RMSE_df, bedrooms):
     plt.setp(ax.xaxis.get_majorticklabels(), ha="right", rotation=45, rotation_mode="anchor")
     fig.legend(bbox_to_anchor = (0.85, 0.86))
     plt.savefig(f'images/{bedrooms}_bdrm_RMSE.png')
+
 
 def run_forecast(df_dict, model_best_df):
     forecast_dict = {}
@@ -366,6 +380,7 @@ def run_forecast(df_dict, model_best_df):
         plt.savefig(f'images/1_bdrm_forecast_{zipcode}.png')
     return forecast_dict
 
+
 def create_final_df(df_dict, forecast_dict, bedrooms):
     final_dict = {'zipcode': list(forecast_dict.keys()),
                   'current_value': [df.iloc[-1].values[0] for df in list(df_dict.values())],
@@ -377,6 +392,7 @@ def create_final_df(df_dict, forecast_dict, bedrooms):
     final_sorted_df.set_index('zipcode', inplace=True)
     final_sorted_df.to_csv(f'data/{bedrooms}_bdrm_final_forecasts.csv')
     return final_sorted_df
+
 
 def visualize_forecasts(df, forecast_df, bedrooms):
     fig, ax = plt.subplots(figsize=(20,12))
@@ -395,6 +411,7 @@ def visualize_forecasts(df, forecast_df, bedrooms):
     ax.get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
     plt.savefig(f'images/{bedrooms}_bdrm_home_values_forecast.png')
 
+
 def visualize_results(df1, df2):
     fig, ax = plt.subplots(2, 1, figsize = (12,16))
     ax[0].bar(x=df1.index, height=df1.percent_change)
@@ -410,6 +427,7 @@ def visualize_results(df1, df2):
     plt.setp(ax[1].xaxis.get_majorticklabels(), ha="right", rotation=45, rotation_mode="anchor")
     fig.tight_layout(pad=2.0)
     plt.savefig(f'images/final_forecasts.png')
+
 
 def best_3_zipcodes(sorted_df, bedrooms):
     print(f'The zipcodes with the greatest projected growth in mid-tier {bedrooms}-bedroom home values are:\n{sorted_df.iloc[-3]}\n {sorted_df.iloc[-2]}\n {sorted_df.iloc[-1]}')

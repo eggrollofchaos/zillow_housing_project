@@ -29,6 +29,7 @@ years = mdates.YearLocator()
 years_fmt = mdates.DateFormatter('%Y')
 print('Functions loaded.')
 
+################################################################################
 
 def melt_data(df):
     '''

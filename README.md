@@ -50,7 +50,7 @@ We would like to further optimize our model by incorporating exogenous data on i
 - **README.md**  
   
 ## Bibliography  
-1. Dataset Origin:  
+1. Data set Origin:  
   
        Zillow Research Housing Data  
                Zillow Group  

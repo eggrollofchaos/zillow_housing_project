@@ -24,6 +24,7 @@ Other tools used include Python, NumPy, and Pandas. Visualizations were created 
   
 ## Conclusion
 After running SARIMAX analysis on all zip codes in San Francisco, we found that the following zip codes showed the greatest projected appreciation in value:  
+
 Type of Home    |  Zip Codes                    | Projected </br> Home Value </br> Growth  
 :---------------|:------------------------------|-----------------------------:  
 1-Bedroom Homes | 94124 </br> 94134 </br> 94132 | 6.03% </br> 5.61% </br> 3.57% 

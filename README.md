@@ -63,8 +63,9 @@ Type of Home    |  Zip Codes                    | Projected </br> Home Value </b
 1-Bedroom Homes | 94124 </br> 94134 </br> 94132 | 6.03% </br> 5.61% </br> 3.57% 
 2-Bedroom Homes | 94121 </br> 94116 </br> 94134 | 4.41% </br> 3.07% </br> 2.74% 
 
-<b>We see that 1-bedroom homes in zip code 94124 shows the greatest projected growth in value.</b>  
-Perhaps unsurprisingly, this zip code currently has the lowest prices for San Francisco 1-bedroom homes.  According to our model, in a year's time this zip code will move from the lowest to 5th lowest in price out of the 25 zip codes.
+<b>We see that 1-bedroom homes in zip code `94124` and 2-bedroom homes in zip code `94121` show the greatest projected growth in value.</b>  
+Perhaps unsurprisingly, **94124** currently has the lowest prices for San Francisco 1-bedroom homes. According to our model, in a year's time this zip code will move from the lowest to 5th lowest rank of the 25 zip codes.  
+By contrast, **94121** currently has the 10th highest prices for San Francisco 2-bedroom homes. According to our model, this zip code will move up to the 6th rank in a year.
 
 ## Further Actions  
 Using exogenous variables such as school district data, crime data, presence of parks/nature in vicinity, proximity to hospitals, groceries, entertainment, transportation etc., we can further refine our model as well as assign weights based on what a home buyer is looking to prioritize. We may find that growth in home value may be highly correlated to better education, lower crime rate, etc.   

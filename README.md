@@ -1,7 +1,7 @@
 # Time Series projections for Zillow Housing Data for San Fracisco - Flatiron School Data Science Immersive (Phase 4 Project)
   
 ## Overview  
-The pandemic has had far-reaching consequences for the global markets, with major indices plunging before making a sharp recovery. Real estate was negatively impacted, as metropolitan areas lost their appeal amidst closures and lockdowns. Resident housing, however, recovered and showed new strength as homebuyers started snatching up homes at a discount. As vaccine rollout continues and the economy recovers, we are seeing a boom in housing; 5.64 million homes were sold in 2020, up from 5.34 in 2019, and home sales are projected to be 6.49 million in 2021, according to the [National Association of Realtors](https://www.statista.com/statistics/226144/us-existing-home-sales/).
+The pandemic has had far-reaching consequences for the global markets, with major indices plunging before making a sharp recovery. Real estate was negatively impacted, as metropolitan areas lost their appeal amidst closures and lockdowns. Resident housing, however, recovered and showed new strength as homebuyers started snatching up homes at a discount. As vaccine rollout continues and the economy recovers, we are seeing a boom in housing; 5.64 million homes were sold in 2020 (up 5.6% from 5.34 million in 2019), and home sales are projected to be 6.49 million in 2021 (a growth of 15%), according to the [National Association of Realtors](https://www.statista.com/statistics/226144/us-existing-home-sales/).
 
 In this project, we examine and perform time series analysis on a data set of housing data from [Zillow Research](https://www.zillow.com/research/data/) to determine whether 1-bedroom or 2-bedrooms homes in San Francisco would be better for investment on a 1 year time horizon.  We look at each of the 25 zip codes across both data sets as separate time series, and project the price growth within a year for each to find the zip codes that will likely grow the fastest.
 
@@ -63,8 +63,9 @@ Type of Home    |  Zip Codes                    | Projected </br> Home Value </b
 1-Bedroom Homes | 94124 </br> 94134 </br> 94132 | 6.03% </br> 5.61% </br> 3.57% 
 2-Bedroom Homes | 94121 </br> 94116 </br> 94134 | 4.41% </br> 3.07% </br> 2.74% 
 
-<b>We see that 1-bedroom homes in zip code 94124 shows the greatest projected growth in value.</b>  
-Perhaps unsurprisingly, this zip code currently has the lowest prices for San Francisco 1-bedroom homes.  According to our model, in a year's time this zip code will move from the lowest to 5th lowest in price out of the 25 zip codes.
+<b>We see that 1-bedroom homes in zip code `94124` and 2-bedroom homes in zip code `94121` show the greatest projected growth in value.</b>  
+Perhaps unsurprisingly, **94124** currently has the lowest prices for San Francisco 1-bedroom homes. According to our model, in a year's time this zip code will move from the lowest to 5th lowest rank of the 25 zip codes.  
+By contrast, **94121** currently has the 10th highest prices for San Francisco 2-bedroom homes. According to our model, this zip code will move up to the 6th rank in a year.
 
 ## Further Actions  
 Using exogenous variables such as school district data, crime data, presence of parks/nature in vicinity, proximity to hospitals, groceries, entertainment, transportation etc., we can further refine our model as well as assign weights based on what a home buyer is looking to prioritize. We may find that growth in home value may be highly correlated to better education, lower crime rate, etc.   

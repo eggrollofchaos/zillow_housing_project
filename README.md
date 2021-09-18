@@ -77,7 +77,7 @@ We would like to further optimize our model by incorporating exogenous data on i
     ├── code/                                # python helper functions
         ├── functions.py                     # helper functions
     ├── crisp_dm_process/                    # initial EDA and model notebook files 
-        ├── SF_Modeling.ipynb                # notebook file with initial data exploration, insights, and takeaways  
+        ├── SF_WIP.ipynb                     # notebook file with initial data exploration and rough insights
     ├── data/                                # project data sets as well as model output data
     ├── images/                              # visualizations; images for notebooks, README, and presentation slides
     ├── zillow_housing_final.ipynb           # primary project notebook 

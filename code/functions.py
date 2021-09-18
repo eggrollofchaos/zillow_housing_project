@@ -4,6 +4,7 @@ import numpy as np
 from sklearn import metrics
 
 import itertools
+import warnings
 from dateutil.relativedelta import relativedelta
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.seasonal import seasonal_decompose
@@ -52,13 +53,14 @@ def create_df_dict(df):
     data_list = []
 
     for key in keys:
-        new_df = df[df.zipcode == int(key)]
+        new_df = df.copy()[df.zipcode == int(key)]
         new_df.drop('zipcode', inplace=True, axis=1)
         new_df.columns = ['date', 'value']
         new_df.date = pd.to_datetime(new_df.date)
         new_df.set_index('date', inplace=True)
         new_df = new_df.asfreq('M')
         data_list.append(new_df)
+
 
     df_dict = dict(zip(keys, data_list))
 
@@ -129,7 +131,7 @@ def plot_acf_housing(df_all, bedrooms):
     ax[2].set_ylabel('ACF', size=14)
     acf_fig.tight_layout()
     acf_fig.subplots_adjust(top=0.9)
-    plt.savefig(f'images/{bedrooms}_bdrm_PACF.png')
+    plt.savefig(f'images/{bedrooms}_bdrm_ACF.png')
 
 
 def plot_seasonal_decomposition(df_all, bedrooms):
@@ -172,7 +174,7 @@ def train_test_split_housing(df_dict, split=84):
 
 
 def gridsearch_SARIMAX(train_dict, seas = 12, p_min=2, p_max=2, q_min=0, q_max=0, d_min=1, d_max=1,
-                       s_p_min=2, s_p_max=2, s_q_min=0, s_q_max=0, s_d_min=1, s_d_max=1):
+                       s_p_min=2, s_p_max=2, s_q_min=0, s_q_max=0, s_d_min=1, s_d_max=1, verbose=True):
     p = range(p_min, p_max+1)
     q = range(q_min, q_max+1)
     d = range(d_min, d_max+1)
@@ -181,10 +183,11 @@ def gridsearch_SARIMAX(train_dict, seas = 12, p_min=2, p_max=2, q_min=0, q_max=0
     s_d = range(s_d_min, s_d_max+1)
     pdq = list(itertools.product(p, d, q))
     seasonal_pdq = [(x[0], x[1], x[2], seas) for x in list(itertools.product(s_p, s_d, s_q))]
-    print('Parameters for SARIMAX grid search...')
-    for i in pdq:
-        for s in seasonal_pdq:
-            print('SARIMAX: {} x {}'.format(i, s))
+    if verbose:
+        print('Parameters for SARIMAX grid search...')
+        for i in pdq:
+            for s in seasonal_pdq:
+                print('SARIMAX: {} x {}'.format(i, s))
 
     zipcodes = []
     param_list = []
@@ -195,16 +198,27 @@ def gridsearch_SARIMAX(train_dict, seas = 12, p_min=2, p_max=2, q_min=0, q_max=0
         for param in pdq:
             for param_seasonal in seasonal_pdq:
                 mod = SARIMAX(train,
-                              order=param,
-                              seasonal_order=param_seasonal,
-                              enforce_stationarity=False,
-                              enforce_invertibility=False)
+                    order=param,
+                    seasonal_order=param_seasonal,
+                    enforce_stationarity=False,
+                    enforce_invertibility=False)
                 zipcodes.append(zipcode[-5:])
                 param_list.append(param)
                 param_seasonal_list.append(param_seasonal)
-                aic = mod.fit().aic
+                with warnings.catch_warnings():
+                    warnings.filterwarnings('error')
+                    try:
+                        aic = mod.fit(maxiter=1000).aic
+                    except Warning as e:
+                        continue
                 aic_list.append(aic)
-                print(f'Zip code {zipcode}: {aic}')
+                if verbose:
+                    print(param,param_seasonal)
+                    print(f'Zip Code {zipcode} | AIC: {aic}')
+                else:
+                    print('-', end='')
+
+    print('\nCompleted.')
     return zipcodes, param_list, param_seasonal_list, aic_list
 
 
@@ -240,12 +254,14 @@ def evaluate_model(train_dict, test_dict, model_best_df):
                                enforce_invertibility=False).fit()
 
             predict = sari_mod.forecast(steps = 12, dynamic = False)
-            print((zipcode,predict.index[-1],predict[-1]))
+            # print((zipcode,predict.index[-1],predict[-1]))
+            print("-", end='')
             predict_dict[zipcode] = predict
             dfB = pd.DataFrame(predict_dict[zipcode])
             dfB.columns = ['value']
             dfA = cat_predict_dict[zipcode]
             cat_predict_dict[zipcode] = pd.concat([dfA, dfB], axis=0)
+    print('\nCompleted.')
     return cat_predict_dict
 
 
@@ -304,14 +320,14 @@ def gridsearch_SARIMAX_test_predict(train_dict, test_dict, seas = 12, p_min=2, p
             for count in range(5):
                 for zipcode, df in cat_predict_dict.items():
                     if cat_predict_dict[zipcode].index[-1] >= pd.to_datetime('2021-02-28'):
-                        print(param, param_seasonal)
+                        # print(param, param_seasonal)
                         window = len(test_dict[zipcode])
                         RMSE = metrics.mean_squared_error(test_dict[zipcode], cat_predict_dict[zipcode].iloc[-window:], squared=False)
                         zipcodes.append(zipcode)
                         param_list.append(param)
                         param_seasonal_list.append(param_seasonal)
                         RMSE_list.append(RMSE)
-                        print(f'Zip code {zipcode}: {RMSE}')
+                        print("-", end='')
                         continue
 
                     sari_mod = SARIMAX(df,
@@ -321,12 +337,13 @@ def gridsearch_SARIMAX_test_predict(train_dict, test_dict, seas = 12, p_min=2, p
                                        enforce_invertibility=False).fit()
 
                     predict = sari_mod.forecast(steps = 12, dynamic = False)
-                    print((zipcode,predict.index[-1],predict[-1]))
+                    # print((zipcode,predict.index[-1],predict[-1]))    # debugging
                     predict_dict[zipcode] = predict
                     dfB = pd.DataFrame(predict_dict[zipcode])
                     dfB.columns = ['value']
                     dfA = cat_predict_dict[zipcode]
                     cat_predict_dict[zipcode] = pd.concat([dfA, dfB], axis=0)
+    print('\nCompleted.')
 
     return zipcodes, param_list, param_seasonal_list, RMSE_list
 

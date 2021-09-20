@@ -33,7 +33,7 @@ Using seasonal decomposition, we can see the overall trends:
 ![1_bed_homes](images/1_bdrm_seasonal_decomp.png)  
 ![2_bed_homes](images/2_bdrm_seasonal_decomp.png)  
 
-We plot the PACF and ACF to estimate AR (moving average) and the MA (autoregressive) order for ARIMA modeling, respectively.  This is shown for illustrative purposes only, as the actual AR/MA terms need to be tuned for each time series (each zip code).  
+We plot the PACF and ACF to estimate AR (autoregressive) and the MA (moving average) order for ARIMA modeling, respectively.  This is shown for illustrative purposes only, as the actual AR/MA terms need to be tuned for each time series (each zip code).  
 ![1_bed_pacf](images/1_bdrm_PACF.png)  
 ![1_bed_acf](images/1_bdrm_ACF.png)  
 ![2_bed_pacf](images/2_bdrm_PACF.png)  

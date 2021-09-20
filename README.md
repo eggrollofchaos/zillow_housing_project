@@ -26,31 +26,31 @@ Other tools used include Python, NumPy, and Pandas. Visualizations were created 
   
 ## Approach
 We look at the overall trajectory of housing prices for 1 and 2 bedroom homes:  
-![1_bed_homes](images/run/1_bdrm_home_values.png)  
-![2_bed_homes](images/run/2_bdrm_home_values.png)  
+![1_bed_homes](images/1_bdrm_home_values.png)  
+![2_bed_homes](images/2_bdrm_home_values.png)  
 
 Using seasonal decomposition, we can see the overall trends:  
-![1_bed_homes](images/run/1_bdrm_seasonal_decomp.png)  
-![2_bed_homes](images/run/2_bdrm_seasonal_decomp.png)  
+![1_bed_homes](images/1_bdrm_seasonal_decomp.png)  
+![2_bed_homes](images/2_bdrm_seasonal_decomp.png)  
 
 We plot the PACF and ACF to estimate AR (moving average) and the MA (autoregressive) order for ARIMA modeling, respectively.  This is shown for illustrative purposes only, as the actual AR/MA terms need to be tuned for each time series (each zip code).  
-![1_bed_pacf](images/run/1_bdrm_PACF.png)  
-![1_bed_acf](images/run/1_bdrm_ACF.png)  
-![2_bed_pacf](images/run/2_bdrm_PACF.png)  
-![2_bed_acf](images/run/2_bdrm_ACF.png)  
+![1_bed_pacf](images/1_bdrm_PACF.png)  
+![1_bed_acf](images/1_bdrm_ACF.png)  
+![2_bed_pacf](images/2_bdrm_PACF.png)  
+![2_bed_acf](images/2_bdrm_ACF.png)  
 
 Using a GridSearchCV to determine best fit models and performing a stepwise historical cross-validation, we can evaluate model fit using RMSE.  
 Here are two sample test / predict plots:  
-![1_bed_test_predict](images/run/1_bdrm_test_predict94124.png)  
-![2_bed_test_predict](images/run/2_bdrm_test_predict94121.png)  
+![1_bed_test_predict](images/1_bdrm_test_predict94124.png)  
+![2_bed_test_predict](images/2_bdrm_test_predict94121.png)  
 
 Here are the plots of RMSE and RMSE as a percentage of Price for our best models, to show model error:  
-![1_bed_RMSE](images/run/1_bdrm_RMSE.png)  
-![2_bed_RMSE](images/run/2_bdrm_RMSE.png)  
+![1_bed_RMSE](images/1_bdrm_RMSE.png)  
+![2_bed_RMSE](images/2_bdrm_RMSE.png)  
 
 Then, using our best models we forecasted prices one year into the future. Here are two sample forecasts:  
-![1_bed_forecast](images/run/1_bdrm_forecast_94121.png)  
-![2_bed_forecast](images/run/2_bdrm_forecast.png)  
+![1_bed_forecast](images/1_bdrm_forecast_94124.png)  
+![2_bed_forecast](images/2_bdrm_forecast_94121.png)  
 
 Finally, we calculate the percentage change forecasted for each zip code to determine which zip codes would grow the most. Here are the results graphically:  
 ![final_forecasts](images/final_forecasts.png)  

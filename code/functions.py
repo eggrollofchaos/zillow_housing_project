@@ -44,8 +44,21 @@ def melt_data(df):
     return melted
 
 
-def visualize_data(df):
-    pass
+def visualize_data(df, sf_all, bedrooms):
+    fig, ax = plt.subplots(figsize=(15,10))
+    ax.set_title(f'{bedrooms}-Bedroom Home Values in San Franciso by Zip Code', size=24)
+    sns.lineplot(data=df, x=df.date, y=df.value, ax=ax, hue='zipcode', style='zipcode')
+    sns.lineplot(data=sf_all, x=sf_all.index, y=sf_all.value, ax=ax, color = 'b', label='all')
+    ax.set_xlabel('Year',  size=20)
+    ax.set_ylabel('Home Value (USD)', size=20)
+    ax.set_xlim(pd.Timestamp('1996'), pd.Timestamp('2022-05-31'))
+    ax.xaxis.set_major_locator(years)
+    ax.xaxis.set_major_formatter(years_fmt)
+    ax.set_yticks(np.linspace(1e5,1.5e6,15))
+    ax.set_ylim((1e5, 1.5e6))
+    ax.get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    plt.savefig(f'images/{bedrooms}_bdrm_home_values.png')
 
 
 def create_df_dict(df):

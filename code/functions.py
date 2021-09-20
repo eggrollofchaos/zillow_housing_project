@@ -1,5 +1,5 @@
 import pandas as pd
-import matplotlib
+import matplotlib as mpl
 import numpy as np
 from sklearn import metrics
 
@@ -16,11 +16,12 @@ import seaborn as sns
 from matplotlib import ticker
 import matplotlib.dates as mdates
 from matplotlib.dates import DateFormatter
-plt.style.use('ggplot')
+# plt.style.use('ggplot')
 sns.set_theme(style="darkgrid")
 
 font = {'size'   : 12}
-matplotlib.rc('font', **font)
+mpl.rc('font', **font)
+mpl.rc('figure', max_open_warning = 0)
 
 pd.set_option('display.max_columns',None)
 pd.set_option('display.max_rows',25)
@@ -135,7 +136,7 @@ def plot_acf_housing(df_all, bedrooms):
 
 
 def plot_seasonal_decomposition(df_all, bedrooms):
-    decomp = seasonal_decompose(df_all, freq=12)
+    decomp = seasonal_decompose(df_all, period=12)
     dc_obs = decomp.observed
     dc_trend = decomp.trend
     dc_seas = decomp.seasonal
@@ -375,7 +376,7 @@ def plot_RMSE(RMSE_df, bedrooms):
     plt.savefig(f'images/{bedrooms}_bdrm_RMSE.png')
 
 
-def run_forecast(df_dict, model_best_df):
+def run_forecast(df_dict, model_best_df, bedrooms):
     forecast_dict = {}
 
     for zipcode, df in df_dict.items():
@@ -393,9 +394,9 @@ def run_forecast(df_dict, model_best_df):
         ax.plot(df.index, df.value, label='Historical')
         ax.plot(forecast, label='Forecast')
         ax.set_title(
-            f'1-Bedroom San Francisco {zipcode} Home Values: 1 Year Forecast\nusing SARIMAX{model_best_df.loc[zipcode].param}x{model_best_df.loc[zipcode].param_seasonal}')
+            f'{bedrooms}-Bedroom San Francisco {zipcode} Home Values: 1 Year Forecast\nusing SARIMAX{model_best_df.loc[zipcode].param}x{model_best_df.loc[zipcode].param_seasonal}')
         plt.legend()
-        plt.savefig(f'images/1_bdrm_forecast_{zipcode}.png')
+        plt.savefig(f'images/{bedrooms}_bdrm_forecast_{zipcode}.png')
     return forecast_dict
 
 

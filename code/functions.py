@@ -146,7 +146,7 @@ def plot_seasonal_decomposition(df_all, bedrooms):
     start = dc_df.iloc[:, 0].index[0]
     end = dc_df.iloc[:, 0].index[-1] + relativedelta(months=+15) + relativedelta(day=31)
 
-    decomp_fig, axes = plt.subplots(4, 1, figsize=(12, 12))
+    decomp_fig, axes = plt.subplots(4, 1, figsize=(15, 15))
     for i, ax in enumerate(axes):
         ax.plot(dc_df.iloc[:, i])
         ax.set_xlim(start, end)

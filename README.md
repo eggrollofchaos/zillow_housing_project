@@ -75,14 +75,14 @@ We would like to further optimize our model by incorporating exogenous data on i
 ## Repository Structure
     .
     ├── code/                                # python helper functions
-        ├── functions.py                     # helper functions
+        └── functions.py                     # helper functions
     ├── crisp_dm_process/                    # initial EDA and model notebook files 
-        ├── SF_WIP.ipynb                     # notebook file with initial data exploration and rough insights
+        └── SF_WIP.ipynb                     # notebook file with initial data exploration and rough insights
     ├── data/                                # project data sets as well as model output data
     ├── images/                              # visualizations; images for notebooks, README, and presentation slides
     ├── zillow_housing_final.ipynb           # primary project notebook 
     ├── Zillow_Housing_Project_JS_WAX.pdf    # presentation slides PDF
-    ├── README.md                            # this README
+    └── README.md                            # this README
   
 ## Bibliography  
 1. Data set Origin:  
